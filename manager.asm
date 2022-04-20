@@ -23,48 +23,44 @@
 extern printf
 extern scanf
 
-extern compute_sum
-extern output_one_line
 extern clock_check
 
-global manager ; Giving the function global scope
+global manager ; Function declared with global scope
 
 segment .data ; Indicates initialized data
 
 item_prompt db "How many terms do you want to include? ", 0
 int_format db "%ld", 0
-time_tick db "Thank you. The time is now %lu tics.", 10
-          db "The computation has begun.", 10, 10, 0
-end_tick db 10, "The time is now %lu tics", 10, 10, 0
-elapsed_time db "The elapsed time is %lu tics", 10, 10, 0
-cpu_speed db "An Intel processor was detected. Your processor frequency in GHz: %.2lf GHz", 10, 10, 0
-nanoseconds db "The elapsed time equals %lf nanoseconds", 10, 0
-seconds db "The elapsed time equals %lf seconds", 10, 0
-exit db 10, "The sum will be returned to the caller module.", 10, 0
+start_time db 10, "Thank you. The time is now %lu tics.", 10
+            db "The computation has begun.", 10, 10, 0
+end_time db "The time is now %lu tics.", 10, 10, 0
+elapsed_time db "The elapsed time is %.0lf tics", 10, 10, 0
+cpu_clock db "An Intel processor was detected. Your processor frequency is: %.2lf GHz", 10, 10, 0
+seconds db "The elapsed time equals %.11lf seconds", 10, 10, 0
+exit db "The sum will be returned to the caller module.", 10, 0
 
 segment .bss ; Indicates values that require user input
 
 segment .text ; Stores executable code
 
-manager: ; = int main() {} <--- assembly enters program
+manager: ; program will enter assembly = int main() {}
 
-; Required 15 pushes and pops for asssembly to run
-push       rbp
-
-mov        rbp, rsp
-push       rbx
-push       rcx
-push       rdx
-push       rsi
-push       rdi
-push       r8
-push       r9
-push       r10
-push       r11
-push       r12
-push       r13
-push       r14
-push       r15
+; Backs up 15 pushes, required for assembly
+push rbp
+mov rbp, rsp
+push rbx
+push rcx
+push rdx
+push rdi
+push rsi
+push r8
+push r9
+push r10
+push r11
+push r12
+push r13
+push r14
+push r15
 pushf
 
 ; ask user for number of items
@@ -73,93 +69,97 @@ mov rdi, item_prompt
 call printf
 
 ; take in user input
+mov rax, 0
 mov rdi, int_format
 mov rsi, rsp
 call scanf
-; save input
-mov r13, [rsp]
+;mov r15, [rsi] use daniels method
 
-;Tick Calulator
-;----------------------------------------------------
-; clear space in rax & rdx
+; Start Tick Calulator
+;---------------------
+
+; zero out rax and rdx to use
 mov rax, 0
 mov rdx, 0
 
-cpuid ; get cpu information
-rdtsc ; program reads time stamp
+cpuid ; stop system process
+rdtsc ; read cpu info
 
-shl rdx, 32 ; shift 32 bits to the left
-add rdx, rax ; add other half of ticks into rdx
-mov r15, rdx ; store ticks into register 15
+shl rdx, 32 ; shift bits in rdx 32 bits left
+add rdx, rax ; add right half of cpu info
+mov r14, rdx ; store tics into r14
 
-; print out starting tick
+; print out start time tics elapsed
 mov rax, 0
-mov rdi, time_tick
-mov rsi, r15
-call printf
-
-; call compute sum function
-mov rax, 0
-mov rdi, r13
-call compute_sum
-
-; find end tics time info
-cpuid
-rdtsc
-
-; complete end tic
-shl rdx, 32
-add rdx, rax
-mov r14, rdx ; store into r14
-
-; print out end tics
-mov rax, 0
-mov rdi, end_tick
+mov rdi, start_time
 mov rsi, r14
 call printf
 
-; get elapsed_time of tick
-; convert r15 and r 14 into floats
-cvtsi2sd xmm15, r15
-cvtsi2sd xmm14, r14
+; print harmonic sum for n = 100
+;mov rax, 1
+;mov rdi, harmon
+;movsd xmm0, xmm10
+;call printf
 
-subsd xmm14, xmm15 ; take tic end minus with tic start
-movsd xmm15, xmm14 ; store it inside xmm15
-movsd xmm12, xmm15 ; copy elapsed_time
+; End Tick Calulator
+;---------------------
+
+cpuid ; stop system processes
+rdtsc ; read cpu info
+
+shl rdx, 32 ; shift bits in rdx 32 bits left
+add rdx, rax ; add right half of cpu info
+mov r13, rdx ; store tics into r13
+
+; print out end tics
+mov rax, 0
+mov rdi, end_time
+mov rsi, r13
+call printf
+
+; Elapsed Time Calulator
+;---------------------
+
+; convert tics to float numbers
+cvtsi2sd xmm15, r14 ; start time
+cvtsi2sd xmm14, r13 ; end time
+
+subsd xmm14, xmm15 ; subtract end with start tic
+movsd xmm15, xmm14 ; save value intto xmm15
+movsd xmm12, xmm15 ; copy elapsed time into xmm12
 
 ; print out elapsed tics
-mov rax, 0
+mov rax, 1
 mov rdi, elapsed_time
 movsd xmm0, xmm15
 call printf
 
-; get cpu speed
+;--------------------
+
+; get cpu clock speed
 mov rax, 1
 call clock_check
 movsd xmm13, xmm0
 
-; print cpu speed
+; print out cpu clock speed
 mov rax, 1
-mov rdi, cpu_speed
+mov rdi, cpu_clock
 movsd xmm0, xmm13
 call printf
 
- ;divide clockspeed with elapsed tics for nanoseconds
-divsd xmm12, xmm13
+; Nanoseconds and seconds conversation
+;-------------------------------------
 
-; print out nanoseconds
-;mov rax, 1
-;mov rdi, nanoseconds
-;movsd xmm0, xmm12
-;call printf
+;convert to nanoseconds
+divsd xmm12, xmm13 ; take elapsed tic and divde by clock speed
 
-; move 1 billion into xmm11
+; move 1 billion hex into xmm11
 mov rax, 0x41cdcd6500000000
 push rax
 movsd xmm11, [rsp] ; dereference top of stack to move value
 pop rax
 
-; divide nanoseconds by 1 billion to get seconds
+; divide nanoseconds by 1 billion for secs
 divsd xmm12, xmm11
 
 ; print out seconds
@@ -168,16 +168,15 @@ mov rdi, seconds
 movsd xmm0, xmm12
 call printf
 
-; exit output before going back to main
+; return sum text before leaving program 
 mov rax, 0
 mov rdi, exit
 call printf
 
-xorpd xmm0, xmm0 ; place holder to return 0
+xorpd xmm0, xmm0
 
-; Backs up 15 pushes and pop, required for assembly
+; Backs up 15 pops, required for assembly
 popf
-pop rbx
 pop r15
 pop r14
 pop r13
@@ -186,10 +185,11 @@ pop r11
 pop r10
 pop r9
 pop r8
-pop rcx
-pop rdx
 pop rsi
 pop rdi
+pop rdx
+pop rcx
+pop rbx
 pop rbp
 
-ret ; return statemnt
+ret ; return value to caller

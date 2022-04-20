@@ -29,7 +29,7 @@
 #include <string.h>
 #include <time.h>
 
-extern "C" double manager();       // includes tax as external function
+extern "C" double manager(); // includes manager as external function
 
 int main() {
 
