@@ -17,25 +17,25 @@
 #; To run program, type in terminal: "sh r.sh"                                               *
 #*********************************************************************************************
 
-#Removes old files when creating a new compilation
+# Removes old files when creating a new compilation
 rm *.o
 rm *.out
 
 echo "Compiling files..."
 
-#Compiles the assembly code
-nasm -f elf64 -o clock_check.o clock_check.asm #-g -gdwarf
+# Compiles the assembly code
+nasm -f elf64 -o clock_check.o clock_check.asm
 
-#Compiles the C++ code
-g++ -c -m64 -std=c++17 -fno-pie -no-pie -o harmonic.o harmonic.cpp #-g
+# Compiles the C++ code
+g++ -c -m64 -std=c++17 -fno-pie -no-pie -o harmonic.o harmonic.cpp
 
-#Compiles the assembly code
-nasm -f elf64 -o manager.o manager.asm #-g -gdwarf
+# Compiles the assembly code
+nasm -f elf64 -o manager.o manager.asm
 
-#Link files together
-g++ -m64 -std=c++17 -fno-pie -no-pie -o ./linked.out clock_check.o harmonic.o manager.o -lm #-g
+# Link files together
+g++ -m64 -std=c++17 -fno-pie -no-pie -o ./linked.out clock_check.o harmonic.o manager.o
 
 echo "Compilation successful! Running Program:"
 
-#Runs the file linked.out
+# Execute the linked program
 ./linked.out
