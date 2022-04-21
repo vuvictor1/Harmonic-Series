@@ -28,9 +28,9 @@ extern void output_one_line(int i, double h_sum, int n);
 
 void output_one_line(int i, double h_sum, int n) {
   if (i % 84 == 0) {
-    printf("%d                   %lf\n", i, h_sum);
+    printf("%d                  %lf\n", i, h_sum);
   }
   if (i >= n) {
-    printf("%d                   %lf\n", n, h_sum);
+    printf("%d                  %lf\n", n, h_sum);
   }
 }
