@@ -23,12 +23,14 @@
 extern printf
 extern scanf
 
+extern output_one_line
+
 global compute_sum ; Allows manager to call file
 
 segment .data ; Indicates initialized data
 
 header db "Term#		   Sum", 10, 0
-int_test db "The number passed here is %ld", 10, 0
+float_format db "%lf", 10, 0
 
 segment .bss ; Indicates values that require user input
 
@@ -61,10 +63,36 @@ mov rax, 0
 mov rdi, header
 call printf
 
-mov rax, 0
-mov rdi, int_test
+; get the fraction 1/n
+; convert 1 to float
+mov rax, 1
+cvtsi2sd xmm15, rax
+mov r11, 1 ;  set n = 1
+
+loop_begin:
+; make the fraction 1 / n
+cvtsi2sd xmm14, r11 ; convert n = 1 to float
+movsd xmm13, xmm15 ; save 1.0 in xmm13
+divsd xmm13, xmm14 ; divide 1.0 by n
+addsd xmm11, xmm13 ; save fraction into xxm11
+
+; call output_one_line
+mov rax, 1
+mov rdi, r11
+movsd xmm0, xmm11
 mov rsi, r12
-call printf
+call output_one_line
+
+inc r11
+; if n = 1 comparison
+cmp r11, r12
+jg loop_end
+
+jmp loop_begin
+
+loop_end:
+
+xorpd xmm0, xmm0
 
 ; Backs up 15 pops, required for assembly
 popf
