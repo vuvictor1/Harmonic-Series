@@ -28,7 +28,7 @@ global compute_sum ; Allows manager to call file
 segment .data ; Indicates initialized data
 
 header db "Term#		   Sum", 10, 0
-int_format db "%ld", 0
+int_test db "The number passed here is %ld", 10, 0
 
 segment .bss ; Indicates values that require user input
 
@@ -54,11 +54,16 @@ push r14
 push r15
 pushf
 
-mov r11, rdi ; move userinput into r11
+mov r12, rdi ; move userinput into r11
 
 ; print out the header
 mov rax, 0
 mov rdi, header
+call printf
+
+mov rax, 0
+mov rdi, int_test
+mov rsi, r12
 call printf
 
 ; Backs up 15 pops, required for assembly
