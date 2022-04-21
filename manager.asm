@@ -105,6 +105,7 @@ call printf
 mov rax, 0
 mov rdi, r12
 call compute_sum
+movsd xmm10, xmm11
 
 ; End Tick Calulator
 ;---------------------
@@ -178,7 +179,7 @@ mov rax, 0
 mov rdi, exit
 call printf
 
-xorpd xmm0, xmm0
+movsd xmm0, xmm10
 
 ; Backs up 15 pops, required for assembly
 popf
