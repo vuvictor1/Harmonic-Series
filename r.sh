@@ -26,14 +26,20 @@ echo "Compiling files..."
 # Compiles the assembly code
 nasm -f elf64 -o clock_check.o clock_check.asm
 
+# Compiles the assembly code
+nasm -f elf64 -o compute_sum.o compute_sum.asm
+
 # Compiles the C++ code
 g++ -c -m64 -std=c++17 -fno-pie -no-pie -o harmonic.o harmonic.cpp
 
 # Compiles the assembly code
 nasm -f elf64 -o manager.o manager.asm
 
+#Compiles the C code
+gcc -c -m64 -std=c11 -no-pie -o output_one_line.o output_one_line.c
+
 # Link files together
-g++ -m64 -std=c++17 -fno-pie -no-pie -o ./linked.out clock_check.o harmonic.o manager.o
+g++ -m64 -std=c++17 -fno-pie -no-pie -o ./linked.out clock_check.o compute_sum.o harmonic.o manager.o output_one_line.o
 
 echo "Compilation successful! Running Program:"
 
