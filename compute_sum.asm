@@ -30,11 +30,9 @@ global compute_sum ; Allows manager to call file
 segment .data ; Indicates initialized data
 
 header db "Term#		   Sum", 10, 0
-sum_return db 10, "The sum of %ld terms is %lf", 10, 0
+sum_return db 10, "The sum of %ld terms is %.10lf", 10, 0
 
 segment .bss ; Indicates values that require user input
-
-the_array resq 2 ; array of 6 quad words reserved before run time.
 
 segment .text ; Stores executable code
 
@@ -69,38 +67,40 @@ call printf
 ; convert 1 to float
 mov rax, 1
 cvtsi2sd xmm15, rax
-mov r11, 1 ;  set n = 1
+mov r15, 1 ;  set n = 1
 
 loop_begin:
 ; make the fraction 1 / n
-cvtsi2sd xmm14, r11 ; convert n = 1 to float
+cvtsi2sd xmm14, r15 ; convert n = 1 to float
 movsd xmm13, xmm15 ; save 1.0 in xmm13
 divsd xmm13, xmm14 ; divide 1.0 by n
-addsd xmm11, xmm13 ; save fraction into xxm11
+addsd xmm12, xmm13 ; save fraction into xxm12
 
 ; call output_one_line
 mov rax, 1
-mov rdi, r11
-movsd xmm0, xmm11
+mov rdi, r15
+movsd xmm0, xmm12
 mov rsi, r12
 call output_one_line
 
-inc r11
+inc r15
 ; if n = 1 comparison
-cmp r11, r12
+cmp r15, r12
 jg loop_end
 
 jmp loop_begin
 
 loop_end:
 
+; print out sum
 mov rax, 1
 mov rdi, sum_return
 mov rsi, r12
-movsd xmm0, xmm11
+movsd xmm0, xmm12
 call printf
 
-movsd xmm0, xmm11
+; send back sum
+movsd xmm0, xmm12
 
 ; Backs up 15 pops, required for assembly
 popf
