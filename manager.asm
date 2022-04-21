@@ -69,11 +69,14 @@ mov rdi, item_prompt
 call printf
 
 ; take in user input
+push qword 0
+push qword 0
 mov rax, 0
 mov rdi, int_format
 mov rsi, rsp
 call scanf
-;mov r15, [rsi] use daniels method
+pop r12 ; pop input into r12
+pop rax
 
 ; Start Tick Calulator
 ;---------------------
@@ -95,11 +98,7 @@ mov rdi, start_time
 mov rsi, r14
 call printf
 
-; print harmonic sum for n = 100
-;mov rax, 1
-;mov rdi, harmon
-;movsd xmm0, xmm10
-;call printf
+
 
 ; End Tick Calulator
 ;---------------------
@@ -168,7 +167,7 @@ mov rdi, seconds
 movsd xmm0, xmm12
 call printf
 
-; return sum text before leaving program 
+; return sum text before leaving program
 mov rax, 0
 mov rdi, exit
 call printf
