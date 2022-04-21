@@ -54,7 +54,7 @@ push r14
 push r15
 pushf
 
-mov r12, rdi ; move userinput into r11
+mov r12, rdi ; move userinput into r12
 
 ; print out the header
 mov rax, 0
