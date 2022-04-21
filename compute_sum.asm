@@ -30,9 +30,11 @@ global compute_sum ; Allows manager to call file
 segment .data ; Indicates initialized data
 
 header db "Term#		   Sum", 10, 0
-float_format db "%lf", 10, 0
+sum_return db 10, "The sum of %ld terms is %lf", 10, 0
 
 segment .bss ; Indicates values that require user input
+
+the_array resq 2 ; array of 6 quad words reserved before run time.
 
 segment .text ; Stores executable code
 
@@ -92,7 +94,13 @@ jmp loop_begin
 
 loop_end:
 
-xorpd xmm0, xmm0
+mov rax, 1
+mov rdi, sum_return
+mov rsi, r12
+movsd xmm0, xmm11
+call printf
+
+movsd xmm0, xmm11
 
 ; Backs up 15 pops, required for assembly
 popf
