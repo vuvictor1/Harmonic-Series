@@ -23,6 +23,7 @@
 extern printf
 extern scanf
 
+extern compute_sum
 extern clock_check
 
 global manager ; Function declared with global scope
@@ -33,7 +34,7 @@ item_prompt db "How many terms do you want to include? ", 0
 int_format db "%ld", 0
 start_time db 10, "Thank you. The time is now %lu tics.", 10
             db "The computation has begun.", 10, 10, 0
-end_time db "The time is now %lu tics.", 10, 10, 0
+end_time db 10, "The time is now %lu tics.", 10, 10, 0
 elapsed_time db "The elapsed time is %.0lf tics", 10, 10, 0
 cpu_clock db "An Intel processor was detected. Your processor frequency is: %.2lf GHz", 10, 10, 0
 seconds db "The elapsed time equals %.11lf seconds", 10, 10, 0
@@ -98,7 +99,10 @@ mov rdi, start_time
 mov rsi, r14
 call printf
 
-
+; call compute sum
+mov rax, 0
+mov rdi, r12
+call compute_sum
 
 ; End Tick Calulator
 ;---------------------
