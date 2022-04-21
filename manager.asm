@@ -32,7 +32,7 @@ segment .data ; Indicates initialized data
 
 item_prompt db "How many terms do you want to include? ", 0
 int_format db "%ld", 0
-start_time db 10, "Thank you. The time is now %lu tics.", 10
+start_time db "Thank you. The time is now %lu tics.", 10
             db "The computation has begun.", 10, 10, 0
 end_time db 10, "The time is now %lu tics.", 10, 10, 0
 elapsed_time db "The elapsed time is %.0lf tics", 10, 10, 0
@@ -41,8 +41,6 @@ seconds db "The elapsed time equals %.11lf seconds", 10, 10, 0
 exit db "The sum will be returned to the caller module.", 10, 0
 
 segment .bss ; Indicates values that require user input
-
-the_array resq 2 ; array of 6 quad words reserved before run time.
 
 segment .text ; Stores executable code
 
@@ -105,7 +103,7 @@ call printf
 mov rax, 0
 mov rdi, r12
 call compute_sum
-movsd xmm10, xmm11
+movsd xmm10, xmm12
 
 ; End Tick Calulator
 ;---------------------
