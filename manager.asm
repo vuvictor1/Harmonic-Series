@@ -42,6 +42,8 @@ exit db "The sum will be returned to the caller module.", 10, 0
 
 segment .bss ; Indicates values that require user input
 
+the_array resq 2 ; array of 6 quad words reserved before run time.
+
 segment .text ; Stores executable code
 
 manager: ; program will enter assembly = int main() {}
