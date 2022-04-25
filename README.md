@@ -8,3 +8,4 @@ Run Bash File: sh r.sh
 
 To do:
 1. Implement periodic output
+2. Formatting for output
