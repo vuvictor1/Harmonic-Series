@@ -32,11 +32,13 @@ segment .data ; Indicates initialized data
 
 item_prompt db "How many terms do you want to include? ", 0
 int_format db "%ld", 0
+float_format db "%lf", 0
 start_time db "Thank you. The time is now %lu tics.", 10
             db "The computation has begun.", 10, 10, 0
 end_time db 10, "The time is now %lu tics.", 10, 10, 0
 elapsed_time db "The elapsed time is %.0lf tics", 10, 10, 0
 cpu_clock db "An Intel processor was detected. Your processor frequency is: %.2lf GHz", 10, 10, 0
+amd_clock db "An Amd processor was detected. Please enter your processor frequency in GHz: ", 0
 seconds db "The elapsed time equals %.11lf seconds", 10, 10, 0
 exit db "The sum will be returned to the caller module.", 10, 0
 
@@ -145,6 +147,27 @@ mov rax, 1
 call clock_check
 movsd xmm13, xmm0
 
+; check for amd cpu
+mov rax, 0
+cvtsi2sd xmm9, rax
+ucomisd xmm13, xmm9
+jg print_out
+
+; ask for amd clock
+mov rax, 0
+mov rdi, amd_clock
+call printf
+
+; take in amd clock
+mov rax, 1
+mov rdi, float_format
+mov rsi, rsp
+call scanf
+movsd xmm8, [rsp]
+movsd xmm13, xmm8
+jmp amd_exit
+
+print_out:
 ; print out cpu clock speed
 mov rax, 1
 mov rdi, cpu_clock
@@ -153,7 +176,7 @@ call printf
 
 ; Nanoseconds and seconds conversation
 ;-------------------------------------
-
+amd_exit:
 ;convert to nanoseconds
 divsd xmm12, xmm13 ; take elapsed tic and divde by clock speed
 
