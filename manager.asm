@@ -177,7 +177,7 @@ mov rax, 0
 mov rdi, exit
 call printf
 
-movsd xmm0, xmm10
+movsd xmm0, xmm10 ; send seconds
 
 ; Backs up 15 pops, required for assembly
 popf
