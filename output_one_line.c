@@ -27,7 +27,7 @@
 extern void output_one_line(int i, double h_sum, int n);
 
 void output_one_line(int i, double h_sum, int n) {
-  if (i == 84) {
+  if (i < 100) {
     printf(" %d               %.9lf\n", i, h_sum);
   }
   else if (i % 84 == 0) {
