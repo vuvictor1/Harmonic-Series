@@ -6,3 +6,5 @@ time in tics, nanoseconds, and seconds. Requires userinput for n. Tribrid progra
 Run Bash File: sh r.sh
 ```
 
+To do:
+1. Implement periodic output
