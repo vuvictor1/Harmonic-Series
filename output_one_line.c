@@ -1,9 +1,9 @@
 /*
 ;********************************************************************************************
 ; Author Information:                                                                       *
-; Name:         Victor V. Vu                                                                *
-; Email:        vuvictor@csu.fullerton.edu                                                  *
-; Section:      Cpsc 240-07                                                                 *
+; Name: Victor V. Vu                                                                        *
+; Email: vuvictor@csu.fullerton.edu                                                         *
+; Section: Cpsc 240-07                                                                      *
 ;                                                                                           *
 ; Program Information:                                                                      *
 ; Program Name: Harmonic Series                                                             *
